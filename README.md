@@ -1,6 +1,6 @@
 # Player-Stats
 to build have node.js installed
-Runs using express in root directory of project run command npm install - this will use the package-lock.json file to install all project dependencies 
+Runs using express in root directory of project run command npm install - this will use the package-lock.json file to install all project dependencies then 
 in root directory of projetc run command 'npm start' project will be avalible at http://localhost:3000/
 
 notes
