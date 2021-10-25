@@ -1,6 +1,10 @@
 #badge {
     height: 100px;
     width: 100px;
+    /* display:grid;       
+    margin:auto; */
+    margin-left:60%;
+    margin-top: -10%;     
   background: 
   url('../images/badges_sprite.png') 0px 0px;
   }
@@ -12,6 +16,30 @@
     background-position: center; 
     position: relative;
     
+}
+
+#player
+{
+  display:block;
+    margin:auto;
+}
+
+#players
+{
+  display:block;
+    margin:auto;
+}
+
+#statsList
+{
+  
+  display:block;
+  margin:auto;
+}
+
+#StatCard
+{
+  display: flexbox;
 }
 
 h1
