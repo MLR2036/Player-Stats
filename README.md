@@ -1,14 +1,16 @@
 # Player-Stats
+
+#Project setup and build
 to build have node.js installed
 Runs using express in root directory of project run command npm install - this will use the package-lock.json file to install all project dependencies then 
 in root directory of projetc run command 'npm start' project will be avalible at http://localhost:3000/
 
-notes
+#notes
 - javascript part of project complete
 -CSS not complete
 
 
-Task »
+#Task »
 In undertaking this task, please consider the following:
 ● Semantic and accessible mark-up
 ● CSS produced using SASS
