@@ -6,7 +6,7 @@ async function start()
   const playerImageData = getImageData(playerData);
   dispalyPlayerImages(playerImageData);
   displayPlayerStats(playerData);
-  getBadge()
+  dispalyBadge(playerData);  
 }
 
 function getAvrage(x, y)
@@ -27,6 +27,21 @@ function getPlayerStatsByName(stats, name)
   } 
 }
 
+function getPlayerById(playerData, id)
+{
+  const [player] = playerData.player.filter(element => element.playerid === id);
+
+  if(player)
+  {
+    return player;
+  }
+  else
+  {
+    return 0;
+  }
+}
+
+
 function getPlayerPosition(playerPosition)
 {
   let playerPositionArray = playerPosition.split(/\s/g);
@@ -40,7 +55,7 @@ function getPlayerData(data)
       playerid: player.player.id,
       playerPhotoid: `p${player.player.id}`,
       playerName: `${player.player.name.first} ${player.player.name.last}`,
-      playerTeamid: player.player.currentTeam.id,
+      playerTeamId: player.player.currentTeam.id,
       playPosition: getPlayerPosition(player.player.info.positionInfo),
       playerApperances: getPlayerStatsByName(player.stats,"appearances"), 
       playerGolas: getPlayerStatsByName(player.stats,"goals"), 
@@ -51,35 +66,35 @@ function getPlayerData(data)
   })    
 }
 
-function getBadge(teamId)
+function setBadgeSpritePosistion(teamId)
 {
-  let positionX = 600;
-  let positionY = 1100;
+  let positionX = 700;
+  let positionY = 100;
   
   if(teamId === 1)
   {
-    positionX = 200;
-    positionY = 200;
+    positionX = 1100;
+    positionY = 1000;
   }
   else if(teamId === 11)
   {
-    positionX = 900;
-    positionY = 800;
+    positionX = 400;
+    positionY = 400;
   }
   else if(teamId === 12)
   {
-    positionX = 700;
-    positionY = 900;
+    positionX = 600;
+    positionY = 300;
   }
   else if(teamId === 21)
   {
-    positionX = 600;
-    positionY = 1100;
+    positionX = 700;
+    positionY = 100;
   }
   else if(teamId === 26)
   {
-    positionX = 100;
-    positionY = 100;
+    positionX = 1200;
+    positionY = 1100;
   }
   document.getElementById("badge").style.backgroundPosition = `${positionX}px ${positionY}px`;
 }
@@ -88,7 +103,7 @@ function getImageData(playerData)
 {
   return playerData.map(player =>{
     const playerImage = document.createElement("img");
-    playerImage.src = `images/${player.playerPhotoid}.png`
+    playerImage.src = `images/${player.playerPhotoid}.png`    
     playerImage.id = player.playerPhotoid
     return playerImage;
   })
@@ -102,7 +117,7 @@ function getImageData(playerData)
 function getPlayerStatsData(playerData)
 {
   return playerData.map(player => ({
-    [player.playerPhotoid]: {
+    [player.playerid]: {
       apperances: player.playerApperances,
       goals: player.playerGolas,
       assists: player.playerAssist,
@@ -113,20 +128,45 @@ function getPlayerStatsData(playerData)
   .reduce((a,b) =>({...a,...b}))
 }
 
+function getCurrentTeam(playerData)
+{
+  return playerData.map(player => ({
+    [player.playerid]:{
+      teamId: player.playerTeamId
+    }
+  }))
+  .reduce((a,b) =>({...a,...b}))
+}
+
+function dispalyBadge(playerData)
+{ 
+  const team = getCurrentTeam(playerData)  
+  const dropdown = document.getElementById("players");
+  const selectedIndex = dropdown.selectedIndex;
+  const id = dropdown.options[selectedIndex].id;
+  const teamId = team[id].teamId;
+  setBadgeSpritePosistion(teamId);
+  dropdown.addEventListener("change",() => {
+    const selectedIndex = dropdown.selectedIndex;
+    const id = dropdown.options[selectedIndex].id;
+    const teamId = team[id].teamId;
+    setBadgeSpritePosistion(teamId);
+  })  
+}
+
 function dispalyPlayerImages(playerImageData)
 {  
   const dropdown = document.getElementById("players");
   const selectedIndex = dropdown.selectedIndex;
-  const id = dropdown.options[selectedIndex].id;
+  const id = `p${dropdown.options[selectedIndex].id}`;
   const image = playerImageData[id]; 
   const player = document.getElementById("player")
-  player.src = image.src;
+  player.src = image.src;  
   dropdown.addEventListener("change",() => {
     const selectedIndex = dropdown.selectedIndex;
-    const id = dropdown.options[selectedIndex].id;
+    const id = `p${dropdown.options[selectedIndex].id}`;
     const image = playerImageData[id];
-    player.src = image.src;
-    console.log(id)
+    player.src = image.src;    
   })  
 }
 
@@ -136,13 +176,11 @@ function displayPlayerStats(playerData)
   const dropdown = document.getElementById("players");
   const selectedIndex = dropdown.selectedIndex;
   const id = dropdown.options[selectedIndex].id;
-  const statList = Array.from(document.getElementsByTagName("li"));
-  console.log(statList)
+  const statList = Array.from(document.getElementsByTagName("li")); 
   statList.forEach(element =>{
       const stat = statData[id];      
       const value = stat[element.id];
-      const keys = Object.keys(stat);
-      console.log(value)
+      const keys = Object.keys(stat);      
       keys.forEach(key =>{
         if(key === element.id)
         {
@@ -154,13 +192,11 @@ function displayPlayerStats(playerData)
   dropdown.addEventListener("change", () =>{
   const selectedIndex = dropdown.selectedIndex;
   const id = dropdown.options[selectedIndex].id;
-  const statList = Array.from(document.getElementsByTagName("li"));
-  console.log(statList)
+  const statList = Array.from(document.getElementsByTagName("li")); 
   statList.forEach(element =>{
       const stat = statData[id];      
       const value = stat[element.id];
-      const keys = Object.keys(stat);
-      console.log(value)
+      const keys = Object.keys(stat);      
       keys.forEach(key =>{
         if(key === element.id)
         {
@@ -189,7 +225,7 @@ function populateDropdown(playerData) {
       playerData.forEach(element => {
       let option  = document.createElement("option");
       option.text = element.playerName;
-      option.id = element.playerPhotoid;
+      option.id = element.playerid;      
       dropdown.add(option); 
   })
 }

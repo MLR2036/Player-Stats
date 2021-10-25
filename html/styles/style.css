@@ -2,5 +2,19 @@
     height: 100px;
     width: 100px;
   background: 
-  url('images/badges_sprite.png') 0px 0px;
+  url('../images/badges_sprite.png') 0px 0px;
   }
+
+  .cardBackGround
+{
+    background-image:  url('../images/cardbkg.png');
+    background-repeat: no-repeat;
+    background-position: center; 
+    position: relative;
+    
+}
+
+h1
+{
+    text-align:center;
+}
